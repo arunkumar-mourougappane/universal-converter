@@ -1,65 +1,90 @@
-import { Button, VerticalBox, TextEdit, HorizontalBox } from "std-widgets.slint";
+import { Button, VerticalBox, TextEdit, HorizontalBox, ListView, Switch, ComboBox, StandardButton } from "std-widgets.slint";
 
 export component AppWindow inherits Window {
     width: 720px;
-    height: 240px;
+    height: 360px;
     title: "Universal Converter";
-    in-out property <string> ascii_text;
-    in-out property <string> base64_text;
+    in-out property <string> input_text;
+    in-out property <string> input_text_type;
+    in-out property <string> output_text;
     callback convert_text(string);
+
     VerticalBox {
-        HorizontalBox {
-            Text {
-                max-height: 60px;
-                max-width: 100px;
-                text: "ASCII Text";
-                font-size: 20px;
-                vertical-alignment: TextVerticalAlignment.center;
-            }
+        VerticalBox {
+            HorizontalBox {
+                Text {
+                    max-height: 30px;
+                    min-width: 100px;
+                    text: "Input";
+                    font-size: 18px;
+                    horizontal-alignment: TextHorizontalAlignment.left;
+                    vertical-alignment: TextVerticalAlignment.center;
+                }
 
-            TextInput {
-                input-type: text;
-                max-height: 60px;
-                text <=> root.ascii_text;
-                enabled: true;
-                horizontal-alignment: TextHorizontalAlignment.left;
-                font-size: 20px;
-                vertical-alignment: TextVerticalAlignment.center;
-                selection-background-color: grey;
-            }
-        }
-
-        HorizontalBox {
-            Text {
-                max-height: 60px;
-                max-width: 100px;
-                text: "Base64";
-                font-size: 20px;
-                vertical-alignment: TextVerticalAlignment.center;
+                ComboBox {
+                    y: 0px;
+                    width: 200px;
+                    max-height: 30px;
+                    model: ["ascii", "base64", "Hex", "Decimal", "Binary", "ROT13" ];
+                    current-value: "ascii";
+                    enabled: true;
+                    accessible-label: input_text_type;
+                }
             }
 
             TextEdit {
-                max-height: 60px;
-                text: base64_text;
+                max-height: 260px;
+                text <=> root.input_text;
                 enabled: true;
+                font-size: 18px;
                 horizontal-alignment: TextHorizontalAlignment.left;
-                font-size: 20px;
-                accessible-label: "Base64";
-
+                accessible-label: "ASCII Text";
             }
         }
 
-        HorizontalBox {
-            alignment: LayoutAlignment.center;
-            Button {
-                colorize-icon: true;
+        VerticalBox {
+            HorizontalBox {
+                Text {
+                    max-height: 30px;
+                    min-width: 100px;
+                    text: "Base64";
+                    font-size: 18px;
+                    vertical-alignment: TextVerticalAlignment.center;
+                    wrap: TextWrap.no-wrap;
+                }
+
+                ComboBox {
+                    y: 0px;
+                    width: 200px;
+                    max-height: 30px;
+                    model: ["base64", "Hex", "Decimal", "Binary", "ROT13" ];
+                    current-value: "base64";
+                    enabled: true;
+                }
+            }
+
+            TextEdit {
+                max-height: 260px;
+                text: root.output_text;
                 enabled: true;
-                primary: true;
-                text: "Translate";
+                horizontal-alignment: TextHorizontalAlignment.left;
+                font-size: 18px;
+                accessible-label: "Output";
+            }
+        }
+
+        VerticalBox {
+            alignment: LayoutAlignment.center;
+            max-height: 10px;
+            Button {
+                max-height: 20px;
+                enabled: true;
                 visible: true;
                 width: 100px;
+                text: "Convert";
+                primary: true;
                 clicked => {
-                    root.convert_text(root.ascii_text)
+                    root.convert_text(root.input_text)
                 }
             }
         }
