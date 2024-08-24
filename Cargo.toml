@@ -4,8 +4,13 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+ascii_converter = "0.3.0"
 base64 = "0.22.1"
+hex = "0.4.3"
+itertools = "0.13.0"
+rot13 = "0.1.1"
 slint = "1.7.1"
+thiserror = "1.0.63"
 
 [build-dependencies]
 slint-build = "1.7.1"

@@ -2,12 +2,13 @@ import { Button, VerticalBox, TextEdit, HorizontalBox, ListView, Switch, ComboBo
 
 export component AppWindow inherits Window {
     width: 720px;
-    height: 360px;
+    height: 400px;
     title: "Universal Converter";
     in-out property <string> input_text;
     in-out property <string> input_text_type;
     in-out property <string> output_text;
-    callback convert_text(string);
+    in-out property <string> info_text;
+    callback convert_text(string, string, string);
 
     VerticalBox {
         VerticalBox {
@@ -21,11 +22,16 @@ export component AppWindow inherits Window {
                     vertical-alignment: TextVerticalAlignment.center;
                 }
 
-                ComboBox {
+                input_type := ComboBox {
                     y: 0px;
                     width: 200px;
                     max-height: 30px;
-                    model: ["ascii", "base64", "Hex", "Decimal", "Binary", "ROT13" ];
+                    model: ["ascii",
+                            // "base64",
+                            // "Hex",
+                            // "Decimal",
+                            // "Binary",
+                        ];
                     current-value: "ascii";
                     enabled: true;
                     accessible-label: input_text_type;
@@ -47,19 +53,22 @@ export component AppWindow inherits Window {
                 Text {
                     max-height: 30px;
                     min-width: 100px;
-                    text: "Base64";
+                    text: "Output";
                     font-size: 18px;
                     vertical-alignment: TextVerticalAlignment.center;
                     wrap: TextWrap.no-wrap;
                 }
 
-                ComboBox {
+                output_type := ComboBox {
                     y: 0px;
                     width: 200px;
                     max-height: 30px;
                     model: ["base64", "Hex", "Decimal", "Binary", "ROT13" ];
                     current-value: "base64";
                     enabled: true;
+                    selected => {
+                        root.convert_text(root.input_text, input_type.current-value, output_type.current-value);
+                    }
                 }
             }
 
@@ -76,7 +85,13 @@ export component AppWindow inherits Window {
         VerticalBox {
             alignment: LayoutAlignment.center;
             max-height: 10px;
-            Button {
+            info_text := Text {
+                font-size: 14px;
+                height: 30px;
+                horizontal-alignment: TextHorizontalAlignment.center;
+                color: Colors.red;
+            }
+            translate_button := Button {
                 max-height: 20px;
                 enabled: true;
                 visible: true;
@@ -84,7 +99,7 @@ export component AppWindow inherits Window {
                 text: "Convert";
                 primary: true;
                 clicked => {
-                    root.convert_text(root.input_text)
+                    root.convert_text(root.input_text,  input_type.current-value , output_type.current-value);
                 }
             }
         }
